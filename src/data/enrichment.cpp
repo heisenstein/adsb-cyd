@@ -64,6 +64,7 @@ static void fetch_task(void *param) {
         HTTPClient http;
         http.begin(client, url);
         http.setTimeout(5000);
+        http.setUserAgent("adsb-cyd-radar/1.1");
         if (http.GET() == HTTP_CODE_OK) {
             String payload = http.getString();
             JsonDocument doc;
@@ -90,6 +91,7 @@ static void fetch_task(void *param) {
         HTTPClient http;
         http.begin(client, url);
         http.setTimeout(5000);
+        http.setUserAgent("adsb-cyd-radar/1.1");
         if (http.GET() == HTTP_CODE_OK) {
             String payload = http.getString();
             JsonDocument doc;
@@ -122,6 +124,7 @@ static void fetch_task(void *param) {
         HTTPClient http;
         http.begin(client, url);
         http.setTimeout(5000);
+        http.setUserAgent("adsb-cyd-radar/1.1");
         if (http.GET() == HTTP_CODE_OK) {
             String payload = http.getString();
             JsonDocument doc;

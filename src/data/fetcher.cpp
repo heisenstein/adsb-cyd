@@ -249,11 +249,11 @@ static void fetch_task(void *param) {
                 HTTPClient http;
                 http.begin(client, url);
                 http.setTimeout(10000);
+                http.setUserAgent("adsb-cyd-radar/1.1");
                 uint32_t t0 = millis();
                 int httpCode = http.GET();
                 Serial.printf("Fetch: HTTP %d, %lums, heap=%lu\n",
                     httpCode, (unsigned long)(millis() - t0),
-                    http.setUserAgent("adsb-cyd-radar/1.1")
                     (unsigned long)heap_caps_get_free_size(MALLOC_CAP_INTERNAL));
 
                 if (httpCode == HTTP_CODE_OK) {
@@ -384,6 +384,7 @@ static void route_enrich_task(void *param) {
             HTTPClient http;
             http.begin(client, url);
             http.setTimeout(8000);
+            http.setUserAgent("adsb-cyd-radar/1.1");
             int code = http.GET();
 
             if (code == HTTP_CODE_OK) {
