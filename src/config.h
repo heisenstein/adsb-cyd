@@ -1,12 +1,13 @@
 #pragma once
 
 // WiFi credentials
-#define WIFI_SSID "ATTGpyJKmS"
-#define WIFI_PASS "cw7nqpsr?sun"
+#define WIFI_SSID "squirrel_net"
+#define WIFI_PASS "LFGM2026!"
 
 // Home location
-#define HOME_LAT 30.6905
-#define HOME_LON -88.1632
+// Newark Airport (EWR/KEWR) coordinates
+#define HOME_LAT 40.6925
+#define HOME_LON -74.1687
 
 // ADS-B settings — reduced for CYD (no PSRAM, 320KB DRAM)
 #define ADSB_RADIUS_NM 25
