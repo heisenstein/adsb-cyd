@@ -27,13 +27,14 @@ No PSRAM required. No LVGL. Just direct TFT_eSPI rendering on a $15 board.
 - **ESP32-2432S028** (ESP32-WROOM-32 with 2.8" ILI9341 320x240 TFT + XPT2046 touch)
 - Available on AliExpress/Amazon for ~$15
 - No additional wiring needed — everything is on-board
+- **USB connector varies by board revision.** The original boards have a Micro USB port; newer revisions have a **USB-C** port instead of, or in addition to, the Micro USB one. Either connector works for power, flashing and the serial monitor. Some revisions also use a different USB-to-serial chip (CH340 or CP2102), so install the matching driver (see Setup step 2).
 
 ### Board layout
 
 ![CYD board back](images/ESP32-Cheap-Yellow-Display-CYD-Board-ESP32-2432S028R-back-labeled.jpg)
 
 Key components (viewing the back of the board):
-- **Micro USB** (left side) — for power, programming, and serial monitor
+- **Micro USB** (left side) — for power, programming, and serial monitor. Newer revisions have a **USB-C** port (and some keep both).
 - **BOOT button** — near the center of the board, next to the speaker
 - **RST button** — top-right corner
 - **ESP-WROOM-32** — the metal-shielded module on the right
@@ -88,7 +89,7 @@ You can find your coordinates at [latlong.net](https://www.latlong.net/).
 
 ### 5. Connect the CYD
 
-Plug in the CYD via the **Micro USB** port (left side of the board, when viewing from the back). **Use a data cable, not a charge-only cable** — if the board isn't detected, the cable is the most likely cause.
+Plug in the CYD via the **Micro USB** port (left side of the board, when viewing from the back), or the **USB-C** port if your board revision has one. **Use a data cable, not a charge-only cable** — if the board isn't detected, the cable is the most likely cause.
 
 Verify the board is detected:
 
