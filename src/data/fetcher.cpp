@@ -253,6 +253,7 @@ static void fetch_task(void *param) {
                 int httpCode = http.GET();
                 Serial.printf("Fetch: HTTP %d, %lums, heap=%lu\n",
                     httpCode, (unsigned long)(millis() - t0),
+                    http.setUserAgent("adsb-cyd-radar/1.1")
                     (unsigned long)heap_caps_get_free_size(MALLOC_CAP_INTERNAL));
 
                 if (httpCode == HTTP_CODE_OK) {
