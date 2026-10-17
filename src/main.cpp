@@ -323,6 +323,8 @@ static void cycle_view() {
 static int arrivals_ac_idx[MAX_AIRCRAFT];
 static int arrivals_row_count = 0;
 static int arrivals_list_y = 0;
+#define ARR_BTN_H 24
+#define ARR_BTN_Y (LCD_V_RES - ARR_BTN_H)
 
 // ---- Touch handlers per view ----
 
@@ -348,23 +350,22 @@ static void handle_touch_radar(int tx) {
 }
 
 static void handle_touch_arrivals(int tx, int ty) {
-    if (tx < TOUCH_LEFT_MAX) {
-        // Left: cycle sort
-        arr_sort = (ArrSort)((arr_sort + 1) % 3);
-        view_changed = true;
-    } else if (tx > TOUCH_RIGHT_MIN) {
-        // Right: cycle range
-        range_idx = (range_idx + 1) % NUM_RANGES;
-        view_changed = true;
-    } else {
-        // Center: tap row to open detail, or cycle view if header area
+    if (ty >= ARR_BTN_Y) {
+        // Button strip along the bottom
+        if (tx < TOUCH_LEFT_MAX) {
+            arr_sort = (ArrSort)((arr_sort + 1) % 3);
+            view_changed = true;
+        } else if (tx > TOUCH_RIGHT_MIN) {
+            range_idx = (range_idx + 1) % NUM_RANGES;
+            view_changed = true;
+        }
+    } else if (ty >= arrivals_list_y) {
+        // Anywhere across a row opens the detail view
         int row = (ty - arrivals_list_y) / 16;
         if (row >= 0 && row < arrivals_row_count) {
             detail_idx = arrivals_ac_idx[row];
             current_view = VIEW_DETAIL;
             view_changed = true;
-        } else {
-            cycle_view();
         }
     }
 }
@@ -486,9 +487,21 @@ static void draw_status_bar(bool force) {
     // Auto-cycle indicator
     if (g_config.cycle_enabled) {
         tft.setTextDatum(TR_DATUM);
-        bool paused = (now - last_touch_time) < ((uint32_t)g_config.cycle_inactivity_s * 1000);
-        tft.setTextColor(paused ? pal->grid : pal->status, pal->status_bg);
-        tft.drawString("AUT", 210, 3, 1);
+        uint32_t pause_ms = (uint32_t)g_config.cycle_inactivity_s * 1000;
+        uint32_t since = now - last_touch_time;
+        char ab[16];
+        uint16_t ac = pal->status;
+        if (current_view == VIEW_DETAIL || current_view == VIEW_SETTINGS) {
+            snprintf(ab, sizeof(ab), "AUTO HOLD");       // these views never auto-cycle
+            ac = TFT_YELLOW;
+        } else if (since < pause_ms) {
+            snprintf(ab, sizeof(ab), "PAUSED %lus", (unsigned long)((pause_ms - since + 999) / 1000));
+            ac = TFT_YELLOW;
+        } else {
+            snprintf(ab, sizeof(ab), "AUTO");
+        }
+        tft.setTextColor(ac, pal->status_bg);
+        tft.drawString(ab, 212, 3, 1);
         tft.setTextColor(pal->status, pal->status_bg);
     }
 
@@ -840,7 +853,7 @@ static void draw_arrivals() {
         entries[j + 1] = tmp;
     }
 
-    int max_rows = (RADAR_Y + RADAR_H - y) / 16;
+    int max_rows = (ARR_BTN_Y - y) / 16;
     int drawn = 0;
     char buf[16];
     arrivals_list_y = y;
@@ -873,8 +886,21 @@ static void draw_arrivals() {
     }
     arrivals_row_count = drawn;
 
-    if (y < RADAR_Y + RADAR_H)
-        tft.fillRect(0, y, LCD_H_RES, RADAR_Y + RADAR_H - y, pal->bg);
+    if (y < ARR_BTN_Y)
+        tft.fillRect(0, y, LCD_H_RES, ARR_BTN_Y - y, pal->bg);
+
+    // Button strip: sort (left) and range (right); the rows above open the detail view
+    tft.fillRect(0, ARR_BTN_Y, LCD_H_RES, ARR_BTN_H, pal->status_bg);
+    tft.drawFastHLine(0, ARR_BTN_Y, LCD_H_RES, pal->hdr);
+    tft.drawFastVLine(TOUCH_LEFT_MAX, ARR_BTN_Y, ARR_BTN_H, pal->hdr);
+    tft.drawFastVLine(TOUCH_RIGHT_MIN, ARR_BTN_Y, ARR_BTN_H, pal->hdr);
+    tft.setTextColor(pal->status, pal->status_bg);
+    tft.setTextDatum(MC_DATUM);
+    snprintf(buf, sizeof(buf), "SORT %s", SORT_LABELS[arr_sort]);
+    tft.drawString(buf, TOUCH_LEFT_MAX / 2, ARR_BTN_Y + ARR_BTN_H / 2, 2);
+    tft.drawString("TAP ROW", LCD_H_RES / 2, ARR_BTN_Y + ARR_BTN_H / 2, 1);
+    snprintf(buf, sizeof(buf), "RNG %d", (int)RANGES[range_idx]);
+    tft.drawString(buf, (TOUCH_RIGHT_MIN + LCD_H_RES) / 2, ARR_BTN_Y + ARR_BTN_H / 2, 2);
 }
 
 // ---- Stats screen ----

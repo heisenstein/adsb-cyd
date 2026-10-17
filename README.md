@@ -176,11 +176,13 @@ A tap's position is latched just after contact and a release needs 40 ms without
 | View | Left tap | Center tap | Center HOLD (1s) | Right tap |
 |------|----------|------------|------------------|-----------|
 | **Radar** | Cycle filter (ALL → COM → MIL → EMG → HELI → FAST → SLOW → ODD) | Next view | — | Cycle range (25 → 15 → 10 → 5nm) |
-| **Arrivals** | Cycle sort (DST → ALT → SPD) | Tap aircraft row → Detail view (use the status strip for next view) | — | Cycle range |
+| **Arrivals** | Bottom button strip, left: cycle sort (DST → ALT → SPD) | Tap an aircraft row anywhere across its width → Detail view (use the status strip for next view) | — | Bottom button strip, right: cycle range |
 | **Stats** | Brightness down (-12%) | Next view | Toggle night mode (green/amber) | Brightness up (+12%) |
 | **Log** | Previous page | Next view | — | Next page |
 | **Settings** | Previous setting | Next view | Toggle/change selected setting | Next setting |
 | **Detail** | Previous aircraft | Back to Radar | — | Next aircraft |
+
+**Auto-cycle indicator (status bar):** `AUTO` = running; yellow `PAUSED 42s` = paused after a touch, with the seconds left before it resumes; yellow `AUTO HOLD` = on the Detail or Settings view, which never auto-cycle. Nothing is shown when auto-cycle is off in Settings.
 
 **View cycle:** Radar → Arrivals → Stats → Log → Settings → Radar
 
